@@ -14,11 +14,9 @@ const ShortRoads = () => {
       <MdDirectionsBike className="bike svg" />
       <MdLocationOn className="marker svg" />
       <img src={shortRoadsImg} alt="mapa" />
-      <Link href="/roads">
-        <div className="linkToRoads">
-          <h3>Zobacz nasze proponowane trasy!</h3>
-          <FiMap className="map" />
-        </div>
+      <Link href="/roads" className="linkToRoads">
+        Zobacz nasze proponowane trasy!
+        <FiMap className="map" />
       </Link>
     </Wrapper>
   );
@@ -107,10 +105,9 @@ const Wrapper = styled.div`
     color: white;
     cursor: pointer;
     font-family: var(--headerFont);
-
-    h3 {
-      font-size: 1.8rem;
-    }
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 600;
     svg {
       color: var(--secondaryColor);
       font-size: 3rem;

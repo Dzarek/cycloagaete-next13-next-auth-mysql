@@ -25,10 +25,24 @@ const authOptions = {
           throw new Error("invalid credentials");
         }
         // if everything is fine
-        return { id: "", name: adminProfile[0].email, email: "" };
+        return {
+          id: "",
+          name: "Admin",
+          email: adminProfile[0].email,
+          image: null,
+        };
       },
     }),
   ],
+  // callbacks: {
+  //   async session({ token, session }) {
+  //     if (token) {
+  //       // set session here
+  //       (session.name = token.name), (session.image = "");
+  //     }
+  //     return session;
+  //   },
+  // },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin",

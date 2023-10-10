@@ -57,7 +57,7 @@ const Footer = () => {
       </div>
 
       <p className="allRights">
-        <div className="line"></div>
+        <span className="line"></span>
         &copy; {new Date().getFullYear()} DANIEL PASZEK CYCLO TRENER. Wszelkie
         prawa zastrzeżone.
       </p>
@@ -133,6 +133,7 @@ const Wrapper = styled.footer`
       background: var(--secondaryColor);
       height: 2px;
       margin: 0 auto 2vh;
+      display: block;
     }
   }
 

@@ -1,10 +1,16 @@
 import styled from "styled-components";
 import Masonry from "react-masonry-css";
+
 // import { SRLWrapper } from "simple-react-lightbox";
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getData } from "../lib/datamanagmend";
 
 // const gallery = [
@@ -20,6 +26,7 @@ import { getData } from "../lib/datamanagmend";
 // ];
 
 const Gallery = ({ data_galeria }) => {
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     Aos.init({ duration: 1000, disable: "false" });
   }, []);
@@ -48,6 +55,7 @@ const Gallery = ({ data_galeria }) => {
         </div>
         <div className="galleryContent">
           {/* <SRLWrapper> */}
+
           <Masonry
             breakpointCols={breakpointColumnsObj}
             className="my-masonry-grid"
@@ -56,6 +64,14 @@ const Gallery = ({ data_galeria }) => {
             {data_galeria &&
               data_galeria.imagesMySql.map((item) => {
                 return (
+                  // <Lightbox
+                  //   open={open}
+                  //   close={() => setOpen(false)}
+                  //   key={item.id}
+                  //   data-aos="fade-down"
+                  //   className="oneImg"
+                  //   slides={[item.imagePath]}
+                  // />
                   <img
                     data-aos="fade-down"
                     className="oneImg"

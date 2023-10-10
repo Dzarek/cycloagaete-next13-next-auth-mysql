@@ -50,8 +50,8 @@ const ShortBikes = () => {
           );
         })}
       </Carousel>
-      <Link href="/bikes">
-        <p className="linkToBikes">Zobacz wszystkie</p>
+      <Link href="/bikes" className="linkToBikes">
+        Zobacz wszystkie
       </Link>
     </Wrapper>
   );
@@ -122,6 +122,7 @@ const Wrapper = styled.div`
     font-family: var(--headerFont);
     letter-spacing: 3px;
     text-align: center;
+    display: block;
     :hover {
       border: 2px solid var(--secondaryColor);
       color: var(--secondaryColor);

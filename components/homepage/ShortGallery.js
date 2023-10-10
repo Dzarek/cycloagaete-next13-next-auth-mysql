@@ -48,10 +48,8 @@ const ShortGallery = () => {
           </section>
           <section className="activeImage">
             <img src={activeImg} alt="" />
-            <Link href="/gallery">
-              <p className="galleryLink">
-                Przejdź do galeri zdjęć <HiChevronDoubleRight />
-              </p>
+            <Link href="/gallery" className="galleryLink">
+              Przejdź do galeri zdjęć <HiChevronDoubleRight />
             </Link>
           </section>
         </main>

@@ -34,12 +34,9 @@ const CookieAccept = ({ setVisibleCookie }) => {
           Strona korzysta z plików cookies. Pozostając na niej wyrażasz zgodę na
           ich używanie. <br /> Ze szczegółowymi informacjami dotyczącymi cookies
           na tej stronie można się zapoznać tutaj:
-          <button
-            className="cookieLink2"
-            onClick={() => setVisibleCookie(true)}
-          >
+          <span className="cookieLink2" onClick={() => setVisibleCookie(true)}>
             (Polityka Prywatności).
-          </button>
+          </span>
         </p>
       </div>
     </CookieConsent>

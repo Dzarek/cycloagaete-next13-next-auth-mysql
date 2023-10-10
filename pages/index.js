@@ -11,6 +11,7 @@ import { getData } from "../lib/datamanagmend";
 
 export default function Home({ data_onas }) {
   const dataOnas = data_onas.onas[0].info;
+
   return (
     <>
       <Head>
@@ -21,7 +22,6 @@ export default function Home({ data_onas }) {
         <link rel="apple-touch-icon" href="/logo192.png" />
         <link rel="shortcut icon" href="/logo192.png" />
       </Head>
-
       <div>
         <Header />
         <ShortBikes />

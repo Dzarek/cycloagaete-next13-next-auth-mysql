@@ -35,8 +35,6 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
     Aos.init({ duration: 1000, disable: "false" });
   }, []);
 
-  // console.log(dirs);
-
   const navSide = [
     {
       id: 1,
@@ -155,7 +153,6 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
       // );
       const { data } = await axios.post("/api/addimage", formData);
       addProduct(data.pathName);
-      // console.log(data.pathName);
     } catch (error) {
       console.log(error.response?.data);
     }
@@ -174,6 +171,15 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
   // if (!session) {
   //   router.replace("/auth/signin");
   // }
+
+  // useEffect(() => {
+  //   if (session) {
+  //     status = "authenticated";
+  //   } else {
+  //     status = "unauthenticated";
+  //   }
+  // }, [status]);
+  console.log(dirs);
   return (
     <Wrapper>
       <header>
@@ -235,7 +241,7 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
                     {activeData.name} - <span>edycja</span>
                   </h2>
                   <div className="imagesContainer">
-                    {imagesMySql.map((item) => {
+                    {/* {imagesMySql.map((item) => {
                       return (
                         <div className="imgWrapper" key={item.id}>
                           <img src={item.imagePath} alt="" />
@@ -245,6 +251,19 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
                               onClick={() => setConfirmDelete(item)}
                             />
                           </span>
+                        </div>
+                      );
+                    })} */}
+                    {dirs.map((item, index) => {
+                      return (
+                        <div className="imgWrapper" key={index}>
+                          <img src={`/images/gallery/${item}`} alt="" />
+                          {/* <span>
+                            <FaTrashAlt
+                              className="imgSVG"
+                              onClick={() => setConfirmDelete(item)}
+                            />
+                          </span> */}
                         </div>
                       );
                     })}
@@ -566,18 +585,23 @@ export default Protected;
 export const getServerSideProps = async (context) => {
   const data_onas = await getData("onas");
   const data_galeria = await getData("images");
-
   const dirs = await fs.readdir(
     path.join(process.cwd(), "/public/images/gallery")
   );
 
   const session = await getServerSession(context.req, context.res, authOptions);
-
+  // console.log(session);
   if (!session) {
     return {
       redirect: {
         destination: "/auth/signin",
         permanent: false,
+      },
+      props: {
+        data_onas: null,
+        data_galeria: null,
+        session: null,
+        dirs: null,
       },
     };
   }
@@ -586,8 +610,8 @@ export const getServerSideProps = async (context) => {
     props: {
       data_onas: data_onas,
       data_galeria: data_galeria,
-      dirs: dirs,
       session,
+      dirs: dirs,
     },
   };
 };

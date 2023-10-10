@@ -68,8 +68,8 @@ const ChoosenBike = () => {
                   })}
                 </ul>
               )}
-              <Link href="/reservation">
-                <button className="buttonLink">Rezerwacja</button>
+              <Link href="/reservation" className="buttonLink">
+                Rezerwacja
               </Link>
             </div>
           </div>

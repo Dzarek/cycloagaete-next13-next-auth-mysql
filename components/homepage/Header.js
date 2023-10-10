@@ -12,7 +12,6 @@ const headerBg = "/images/homepage/headerBg.jpg";
 const polandFlag = "/images/poland-flag.png";
 const englandFlag = "/images/england-flag.png";
 
-// const pasekBg = "/images/homepage/pasek.png";
 const logo = "/images/homepage/headerImg2.png";
 
 const Header = () => {
@@ -22,7 +21,6 @@ const Header = () => {
   return (
     <Wrapper>
       <img src={headerBg} alt="" className="headerBg" />
-      {/* <img src={pasekBg} alt="" className="pasek" /> */}
       <div className="logoContainer">
         <img src={logo} alt="" />
       </div>
@@ -99,18 +97,6 @@ const Wrapper = styled.div`
   @media screen and (max-width: 800px) {
     height: 100dvh;
   }
-  /* .pasek {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 126vh;
-    @media screen and (max-width: 1100px) {
-      display: none;
-    }
-    @media screen and (max-height: 500px) {
-      display: none;
-    }
-  } */
   .logoContainer {
     width: 15vw;
     height: 10vh;
@@ -118,11 +104,9 @@ const Wrapper = styled.div`
     top: 0vh;
     left: 0vw;
     z-index: 999;
-    /* padding: 0 5vw 0 5vw; */
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    /* background: #fff; */
     img {
       height: 100%;
     }
@@ -133,8 +117,8 @@ const Wrapper = styled.div`
   .languages {
     border-left: 2px solid var(--secondaryColor);
     display: flex;
-    padding-left: 3vw;
-    margin-left: 3vw;
+    padding-left: 2vw;
+    margin-left: 2vw;
     img {
       width: 35px;
       margin: 0 15px;
@@ -173,6 +157,10 @@ const Wrapper = styled.div`
     @media screen and (max-height: 500px) {
       background-color: rgba(255, 255, 255, 1);
       width: 100vw;
+    }
+    a {
+      text-decoration: none;
+      height: 100%;
     }
     p {
       text-transform: uppercase;
