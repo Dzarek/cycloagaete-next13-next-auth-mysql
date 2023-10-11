@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import Masonry from "react-masonry-css";
 
-// import { SRLWrapper } from "simple-react-lightbox";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
@@ -26,7 +26,8 @@ import { getData } from "../lib/datamanagmend";
 // ];
 
 const Gallery = ({ data_galeria }) => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(-1);
   useEffect(() => {
     Aos.init({ duration: 1000, disable: "false" });
   }, []);
@@ -36,6 +37,13 @@ const Gallery = ({ data_galeria }) => {
     900: 2,
     500: 1,
   };
+
+  let galeryAray = [];
+  if (data_galeria) {
+    galeryAray = data_galeria.imagesMySql.map((item) => {
+      return { src: item.imagePath };
+    });
+  }
 
   return (
     <>
@@ -54,35 +62,33 @@ const Gallery = ({ data_galeria }) => {
           <div className="titleLine"></div>
         </div>
         <div className="galleryContent">
-          {/* <SRLWrapper> */}
-
           <Masonry
             breakpointCols={breakpointColumnsObj}
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
             {data_galeria &&
-              data_galeria.imagesMySql.map((item) => {
+              data_galeria.imagesMySql.map((item, index) => {
+                const { id, imagePath } = item;
                 return (
-                  // <Lightbox
-                  //   open={open}
-                  //   close={() => setOpen(false)}
-                  //   key={item.id}
-                  //   data-aos="fade-down"
-                  //   className="oneImg"
-                  //   slides={[item.imagePath]}
-                  // />
                   <img
                     data-aos="fade-down"
                     className="oneImg"
-                    key={item.id}
-                    src={item.imagePath}
+                    key={id}
+                    src={imagePath}
                     alt=""
+                    onClick={() => setIndex(index)}
                   />
                 );
               })}
           </Masonry>
-          {/* </SRLWrapper> */}
+          <Lightbox
+            index={index}
+            open={index >= 0}
+            close={() => setIndex(-1)}
+            slides={galeryAray}
+            plugins={[Thumbnails, Fullscreen]}
+          />
         </div>
       </Wrapper>
     </>
