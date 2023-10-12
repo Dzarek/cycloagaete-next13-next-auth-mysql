@@ -1,35 +1,22 @@
-// import { useSession } from "next-auth/react";
-// import { useRouter } from "next/router";
-// import Loading from "../components/admin/Loading";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import { signOut } from "next-auth/react";
 
 import { useEffect, useState } from "react";
-import { signOut } from "next-auth/react";
 import styled from "styled-components";
 import { getData } from "../lib/datamanagmend";
+import { getGalleryImages } from "@/lib/cloudinary";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { GrStatusGood } from "react-icons/gr";
 import { FaTrashAlt } from "react-icons/fa";
 
-import axios from "axios";
-import path from "path";
-import fs from "fs/promises";
-
-const Protected = ({ data_onas, data_galeria, dirs }) => {
-  // const router = useRouter();
-  // const { status, data } = useSession();
-
+const Protected = ({ data_onas, data_galeria }) => {
   const [confirmation, setConfirmation] = useState(false);
   const [activeData, setActiveData] = useState(null);
   const [onasInfo, setOnasInfo] = useState(data_onas.onas[0].info);
-  const [imagesMySql, setImagesMySql] = useState(data_galeria.imagesMySql);
+  const [imagesCloudinary, setImagesCloudinary] = useState(data_galeria);
   const [confirmDelete, setConfirmDelete] = useState(null);
-
-  const [uploading, setUploading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     Aos.init({ duration: 1000, disable: "false" });
@@ -85,101 +72,9 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
   // END O NAS
 
   // GALERIA
-  const deleteImage = async (id) => {
-    if (!id) return;
-    const postData = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-      }),
-    };
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL}/api/images`,
-      postData
-    );
-    const response = await res.json();
-    if (response.response.message !== "success") return;
-    const idToRemove = parseFloat(response.response.id);
-    const newDataArray = imagesMySql.filter((item) => item.id !== idToRemove);
-    setImagesMySql(newDataArray);
-  };
-
-  const addProduct = async (pathName) => {
-    const postData = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        imagePath: `/images/gallery/${pathName}`,
-      }),
-    };
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL}/api/images`,
-      postData
-    );
-    const response = await res.json();
-    if (response.response.message !== "success") return;
-    const newProduct = response.response.image;
-    setImagesMySql([
-      ...imagesMySql,
-      {
-        id: newProduct.id,
-        imagePath: newProduct.imagePath,
-      },
-    ]);
-  };
-
-  const handleUpload = async () => {
-    setUploading(true);
-    try {
-      if (!selectedFile) return;
-      const formData = new FormData();
-      formData.append("myImage", selectedFile);
-      // const { data } = await fetch(
-      //   `${process.env.NEXT_PUBLIC_URL}/api/addimage`,
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       formData: formData,
-      //     }),
-      //   }
-      // );
-      const { data } = await axios.post("/api/addimage", formData);
-      addProduct(data.pathName);
-    } catch (error) {
-      console.log(error.response?.data);
-    }
-    setUploading(false);
-  };
 
   // END GALERIA
 
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.replace("/auth/signin");
-  //   }
-  // }, [status]);
-
-  // if (status === "authenticated") {
-  // if (!session) {
-  //   router.replace("/auth/signin");
-  // }
-
-  // useEffect(() => {
-  //   if (session) {
-  //     status = "authenticated";
-  //   } else {
-  //     status = "unauthenticated";
-  //   }
-  // }, [status]);
-  console.log(dirs);
   return (
     <Wrapper>
       <header>
@@ -241,44 +136,33 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
                     {activeData.name} - <span>edycja</span>
                   </h2>
                   <div className="imagesContainer">
-                    {/* {imagesMySql.map((item) => {
-                      return (
-                        <div className="imgWrapper" key={item.id}>
-                          <img src={item.imagePath} alt="" />
-                          <span>
-                            <FaTrashAlt
-                              className="imgSVG"
-                              onClick={() => setConfirmDelete(item)}
-                            />
-                          </span>
-                        </div>
-                      );
-                    })} */}
-                    {dirs.map((item, index) => {
-                      return (
-                        <div className="imgWrapper" key={index}>
-                          <img src={`/images/gallery/${item}`} alt="" />
-                          {/* <span>
-                            <FaTrashAlt
-                              className="imgSVG"
-                              onClick={() => setConfirmDelete(item)}
-                            />
-                          </span> */}
-                        </div>
-                      );
-                    })}
+                    {data_galeria &&
+                      imagesCloudinary.map((item) => {
+                        const { id, image } = item;
+                        return (
+                          <div className="imgWrapper" key={id}>
+                            <img src={image} alt="" />
+                            <span>
+                              <FaTrashAlt
+                                className="imgSVG"
+                                onClick={() => setConfirmDelete(item)}
+                              />
+                            </span>
+                          </div>
+                        );
+                      })}
                   </div>
                   {confirmDelete && (
                     <div className="confirmDelete">
                       <h3>Czy na pewno chcesz usunąć to zdjęcie?</h3>
-                      <img src={confirmDelete.imagePath} alt="" />
+                      <img src={confirmDelete.image} alt="" />
                       <section>
                         <button onClick={() => setConfirmDelete(false)}>
                           Anuluj
                         </button>
                         <button
                           onClick={() => {
-                            deleteImage(confirmDelete.id);
+                            // deleteImage(confirmDelete.id);
                             setConfirmDelete(null);
                           }}
                         >
@@ -287,35 +171,7 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
                       </section>
                     </div>
                   )}
-                  <div className="imgWrapper">
-                    <label>
-                      <input
-                        type="file"
-                        hidden
-                        onChange={({ target }) => {
-                          if (target.files) {
-                            const file = target.files[0];
-                            setSelectedImage(URL.createObjectURL(file));
-                            setSelectedFile(file);
-                          }
-                        }}
-                      />
-                      <div className="">
-                        {selectedImage ? (
-                          <img src={selectedImage} alt="" />
-                        ) : (
-                          <span>Select Image</span>
-                        )}
-                      </div>
-                    </label>
-                    <button
-                      onClick={handleUpload}
-                      disabled={uploading}
-                      style={{ opacity: uploading ? ".5" : "1" }}
-                    >
-                      {uploading ? "Dodawanie.." : "Dodaj"}
-                    </button>
-                  </div>
+                  <div className="imgWrapper"></div>
                 </>
               )}
             </div>
@@ -331,8 +187,6 @@ const Protected = ({ data_onas, data_galeria, dirs }) => {
       )}
     </Wrapper>
   );
-  // }
-  // return <Loading />;
 };
 
 const Wrapper = styled.div`
@@ -583,14 +437,11 @@ const Wrapper = styled.div`
 export default Protected;
 
 export const getServerSideProps = async (context) => {
-  const data_onas = await getData("onas");
-  const data_galeria = await getData("images");
-  const dirs = await fs.readdir(
-    path.join(process.cwd(), "/public/images/gallery")
-  );
-
   const session = await getServerSession(context.req, context.res, authOptions);
-  // console.log(session);
+
+  const data_onas = await getData("onas");
+  const data_galeria = await getGalleryImages();
+
   if (!session) {
     return {
       redirect: {
@@ -598,20 +449,18 @@ export const getServerSideProps = async (context) => {
         permanent: false,
       },
       props: {
+        session: null,
         data_onas: null,
         data_galeria: null,
-        session: null,
-        dirs: null,
       },
     };
   }
 
   return {
     props: {
+      session,
       data_onas: data_onas,
       data_galeria: data_galeria,
-      session,
-      dirs: dirs,
     },
   };
 };

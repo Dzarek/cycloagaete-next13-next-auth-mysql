@@ -11,22 +11,10 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { getData } from "../lib/datamanagmend";
 
-// const gallery = [
-//   "/images/gallery/1.jpg",
-//   "/images/gallery/2.jpg",
-//   "/images/gallery/7.jpg",
-//   "/images/gallery/3.jpg",
-//   "/images/gallery/4.jpg",
-//   "/images/gallery/5.jpg",
-//   "/images/gallery/6.jpg",
-//   "/images/gallery/8.jpg",
-//   "/images/gallery/9.jpg",
-// ];
+import { getGalleryImages } from "@/lib/cloudinary";
 
 const Gallery = ({ data_galeria }) => {
-  // const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(-1);
   useEffect(() => {
     Aos.init({ duration: 1000, disable: "false" });
@@ -40,8 +28,8 @@ const Gallery = ({ data_galeria }) => {
 
   let galeryAray = [];
   if (data_galeria) {
-    galeryAray = data_galeria.imagesMySql.map((item) => {
-      return { src: item.imagePath };
+    galeryAray = data_galeria.map((item) => {
+      return { src: item.image };
     });
   }
 
@@ -68,14 +56,14 @@ const Gallery = ({ data_galeria }) => {
             columnClassName="my-masonry-grid_column"
           >
             {data_galeria &&
-              data_galeria.imagesMySql.map((item, index) => {
-                const { id, imagePath } = item;
+              data_galeria.map((item, index) => {
+                const { id, image } = item;
                 return (
                   <img
                     data-aos="fade-down"
                     className="oneImg"
                     key={id}
-                    src={imagePath}
+                    src={image}
                     alt=""
                     onClick={() => setIndex(index)}
                   />
@@ -174,11 +162,13 @@ const Wrapper = styled.div`
 
 export default Gallery;
 
-export const getServerSideProps = async () => {
-  const data_galeria = await getData("images");
+export async function getStaticProps() {
+  const data_galeria = await getGalleryImages();
+
   return {
     props: {
       data_galeria: data_galeria,
     },
+    revalidate: 60,
   };
-};
+}
