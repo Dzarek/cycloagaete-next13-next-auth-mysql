@@ -265,3 +265,9 @@ html::-webkit-scrollbar-thumb:hover {
   margin-right: -2vw;
   color: #ddd;
 }
+
+.cloudinaryUpload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
