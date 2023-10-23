@@ -62,6 +62,7 @@ const Protected = ({ data_onas, data_galeria }) => {
         >
           Wyloguj się
         </button>
+
         <div className="title">
           <h1>Witaj w Panelu Administratora!</h1>
           <p>edytuj tutaj treść swojej strony</p>

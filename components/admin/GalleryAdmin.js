@@ -2,10 +2,49 @@ import styled from "styled-components";
 import { FaTrashAlt } from "react-icons/fa";
 import UploadImage from "./UploadImage";
 import { useState } from "react";
-// import { deleteImage } from "./CloudinaryDelete";
+import axios from "axios";
+import crypto from "crypto";
 
 const GalleryAdmin = ({ imagesCloudinary, setImagesCloudinary }) => {
   const [confirmDelete, setConfirmDelete] = useState(null);
+
+  // DELETE IMAGE
+  const generateSHA1 = (data) => {
+    const hash = crypto.createHash("sha1");
+    hash.update(data);
+    return hash.digest("hex");
+  };
+
+  const generateSignature = (publicId, apiSecret) => {
+    const timestamp = new Date().getTime();
+    return `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+  };
+
+  const deleteImage = async (publicId) => {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const timestamp = new Date().getTime();
+    const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
+    const apiSecret = process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET;
+    const signature = generateSHA1(generateSignature(publicId, apiSecret));
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
+
+    try {
+      const response = await axios.post(url, {
+        public_id: publicId,
+        signature: signature,
+        api_key: apiKey,
+        timestamp: timestamp,
+      });
+
+      console.error(response);
+      setImagesCloudinary(
+        imagesCloudinary.filter((item) => item.id !== publicId)
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // END DELETE IMAGE
 
   return (
     <Wrapper>
@@ -36,7 +75,7 @@ const GalleryAdmin = ({ imagesCloudinary, setImagesCloudinary }) => {
             <button onClick={() => setConfirmDelete(null)}>Anuluj</button>
             <button
               onClick={() => {
-                // deleteImage(confirmDelete.id);
+                deleteImage(confirmDelete.id);
                 setConfirmDelete(null);
               }}
             >
