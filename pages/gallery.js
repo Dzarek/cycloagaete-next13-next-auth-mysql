@@ -163,7 +163,7 @@ const Wrapper = styled.div`
 export default Gallery;
 
 export async function getStaticProps() {
-  const data_galeria = await getGalleryImages();
+  const data_galeria = await getGalleryImages("galeria");
 
   return {
     props: {

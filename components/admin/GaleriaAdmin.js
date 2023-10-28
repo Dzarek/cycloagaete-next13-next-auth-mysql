@@ -5,7 +5,7 @@ import { useState } from "react";
 import axios from "axios";
 import crypto from "crypto";
 
-const GalleryAdmin = ({ imagesCloudinary, setImagesCloudinary }) => {
+const GaleriaAdmin = ({ imagesCloudinary, setImagesCloudinary }) => {
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   // DELETE IMAGE
@@ -196,4 +196,4 @@ const Wrapper = styled.div`
   }
 `;
 
-export default GalleryAdmin;
+export default GaleriaAdmin;

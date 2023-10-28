@@ -11,12 +11,14 @@ import "aos/dist/aos.css";
 import { GrStatusGood } from "react-icons/gr";
 
 import ONasAdmin from "@/components/admin/ONasAdmin";
-import GalleryAdmin from "@/components/admin/GalleryAdmin";
+import GaleriaAdmin from "@/components/admin/GaleriaAdmin";
+import RoweryAdmin from "@/components/admin/RoweryAdmin";
 
-const Protected = ({ data_onas, data_galeria }) => {
+const Protected = ({ data_onas, data_galeria, data_rowery }) => {
   const [confirmation, setConfirmation] = useState(false);
   const [activeData, setActiveData] = useState(null);
   const [onasInfo, setOnasInfo] = useState(data_onas.onas[0].info);
+  const [rowerySQL, setRowerySQL] = useState(data_rowery.rowery);
   const [imagesCloudinary, setImagesCloudinary] = useState(data_galeria);
 
   useEffect(() => {
@@ -42,7 +44,19 @@ const Protected = ({ data_onas, data_galeria }) => {
     },
     {
       id: 4,
+      name: "Polecane trasy",
+    },
+    {
+      id: 5,
+      name: "FAQ",
+    },
+    {
+      id: 6,
       name: "Regulamin",
+    },
+    {
+      id: 7,
+      name: "Kontakt",
     },
   ];
 
@@ -101,9 +115,15 @@ const Protected = ({ data_onas, data_galeria }) => {
                 />
               )}
               {activeData.name === "Galeria" && (
-                <GalleryAdmin
+                <GaleriaAdmin
                   imagesCloudinary={imagesCloudinary}
                   setImagesCloudinary={setImagesCloudinary}
+                />
+              )}
+              {activeData.name === "Rowery" && (
+                <RoweryAdmin
+                  rowerySQL={rowerySQL}
+                  setRowerySQL={setRowerySQL}
                 />
               )}
             </div>
@@ -246,7 +266,8 @@ export const getServerSideProps = async (context) => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
   const data_onas = await getData("onas");
-  const data_galeria = await getGalleryImages();
+  const data_rowery = await getData("rowery");
+  const data_galeria = await getGalleryImages("galeria");
 
   if (!session) {
     return {
@@ -266,6 +287,7 @@ export const getServerSideProps = async (context) => {
     props: {
       session,
       data_onas: data_onas,
+      data_rowery: data_rowery,
       data_galeria: data_galeria,
     },
   };

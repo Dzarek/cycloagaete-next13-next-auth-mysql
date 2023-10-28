@@ -1,16 +1,17 @@
 import styled from "styled-components";
 import Head from "next/head";
-import { bikesArray } from "../public/data";
+// import { bikesArray } from "../public/data";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import { BiWinkSmile } from "react-icons/bi";
 import OneBike from "../components/OneBike";
+import { getData } from "../lib/datamanagmend";
 
 const bikeVideo = "/images/bikes/bikeVideo.mp4";
 const headerSVG = "/images/bikes/headerSVG.png";
 
-const Bikes = () => {
+const Bikes = ({ data_rowery }) => {
   useEffect(() => {
     Aos.init({ duration: 1000, disable: "false" });
   }, []);
@@ -45,16 +46,17 @@ const Bikes = () => {
           najbardziej Ci odpowiada! <BiWinkSmile />
         </h3>
         <div className="content">
-          {bikesArray.map((item, index) => {
-            return (
-              <article key={index} data-aos="fade-up">
-                <span>{index + 1}</span>
-                <div className="oneBike">
-                  <OneBike item={item} />
-                </div>
-              </article>
-            );
-          })}
+          {data_rowery &&
+            data_rowery.rowery.map((item, index) => {
+              return (
+                <article key={index} data-aos="fade-up">
+                  <span>{index + 1}</span>
+                  <div className="oneBike">
+                    <OneBike item={item} />
+                  </div>
+                </article>
+              );
+            })}
         </div>
       </Wrapper>
     </>
@@ -182,3 +184,14 @@ const Wrapper = styled.div`
 `;
 
 export default Bikes;
+
+export const getStaticProps = async () => {
+  const data_rowery = await getData("rowery");
+
+  return {
+    props: {
+      data_rowery: data_rowery,
+    },
+    revalidate: 60,
+  };
+};
