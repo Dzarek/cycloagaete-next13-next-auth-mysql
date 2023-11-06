@@ -81,7 +81,7 @@ const Protected = ({ data_onas, data_galeria, data_rowery }) => {
           <h1>Witaj w Panelu Administratora!</h1>
           <p>edytuj tutaj treść swojej strony</p>
         </div>
-        <ul>
+        <ul className="menuList">
           <h3>Menu</h3>
           {navSide.map((item) => {
             return (
@@ -173,7 +173,7 @@ const Wrapper = styled.div`
       margin-top: 10px;
     }
   }
-  ul {
+  .menuList {
     position: absolute;
     min-width: 20vw;
     overflow: auto;
@@ -209,6 +209,8 @@ const Wrapper = styled.div`
     margin: 10vh auto;
     width: 90vw;
     color: #222;
+    position: relative;
+    min-height: 80vh;
     .contentTitle {
       text-align: center;
       font-size: 1.8rem;

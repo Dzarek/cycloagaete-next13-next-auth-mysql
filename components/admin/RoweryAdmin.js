@@ -7,18 +7,18 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL }) => {
       <h2 className="contentTitle">
         Rowery - <span>edycja</span>
       </h2>
-      {/* <div className="content"> */}
-      {rowerySQL.map((item, index) => {
-        return (
-          <article key={index} data-aos="fade-up">
-            <span>{index + 1}</span>
-            <div className="oneBike">
-              <OneBike item={item} />
-            </div>
-          </article>
-        );
-      })}
-      {/* </div> */}
+      <div className="content">
+        {rowerySQL.map((item, index) => {
+          return (
+            <article key={index}>
+              <span>{index + 1}</span>
+              <div className="oneBike">
+                <OneBike item={item} />
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </Wrapper>
   );
 };
@@ -27,7 +27,6 @@ const Wrapper = styled.div`
   .content {
     width: 80vw;
     margin: 10vh auto;
-    position: relative;
     article {
       width: 100%;
       margin-bottom: 10vh;
