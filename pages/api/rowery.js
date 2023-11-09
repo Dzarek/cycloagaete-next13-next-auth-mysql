@@ -11,21 +11,29 @@ export default async function handler(req, res) {
     res.status(200).json({ rowery: rowery });
   }
   if (req.method === "POST") {
-    const productName = req.body.product_name;
+    const newBike = req.body.newBike;
+    const { bikeName, bikeImg, bikeDetails, bikeInfo, bikeSize, bikePrices } =
+      newBike;
     const addProduct = await query({
-      query: "INSERT INTO rowery (product_name) VALUES (?)",
-      values: [productName],
+      query:
+        "INSERT INTO rowery (name, img, details, info, size, prices) VALUES (?, ?, ?, ?, ?, ?)",
+      values: [bikeName, bikeImg, bikeDetails, bikeInfo, bikeSize, bikePrices],
     });
     if (addProduct.insertId) {
       message = "success";
     } else {
       message = "error";
     }
-    let product = {
-      product_id: addProduct.insertId,
-      product_name: productName,
+    let bike = {
+      id: addProduct.insertId,
+      name: bikeName,
+      img: bikeImg,
+      details: bikeDetails,
+      info: bikeInfo,
+      size: bikeSize,
+      prices: bikePrices,
     };
-    res.status(200).json({ response: { message: message, product: product } });
+    res.status(200).json({ response: { message: message, bike: bike } });
   }
 
   // if (req.method === "PUT") {

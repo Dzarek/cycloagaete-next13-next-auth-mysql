@@ -4,10 +4,12 @@ import { VscDebugBreakpointData } from "react-icons/vsc";
 import { useGlobalContext } from "./context";
 import { useState, useEffect } from "react";
 import { GiCheckMark } from "react-icons/gi";
+import { useRouter } from "next/router";
 
 const OneBike = ({ item }) => {
   const { name, img, details, info, size, prices } = item;
   const [activeBike, setActiveBike] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const { choosenBikes, setChoosenBikes } = useGlobalContext();
 
   const handleChooseBike = (name) => {
@@ -21,6 +23,10 @@ const OneBike = ({ item }) => {
       setActiveBike(false);
     }
   }, [choosenBikes]);
+
+  const router = useRouter();
+
+  const deleteBike = () => {};
 
   return (
     <Wrapper>
@@ -56,20 +62,55 @@ const OneBike = ({ item }) => {
           <li>6-12 dni - {prices.sixTwelvel} €/dzień</li>
           <li>13 dni - {prices.thirteen} €/dzień</li>
         </ul>
-        {activeBike ? (
-          <button type="button" className="order orderDisabled" disabled>
-            Wybrano
-          </button>
+        {router.pathname === "/protected" ? (
+          <div className="buttonAdminContainer">
+            <button type="button" className="order">
+              Edytuj
+            </button>
+            <button
+              type="button"
+              className="order"
+              onClick={() => setConfirmDelete(true)}
+            >
+              Usuń
+            </button>
+          </div>
         ) : (
-          <button
-            type="button"
-            className="order"
-            onClick={() => handleChooseBike(name)}
-          >
-            Wybierz
-          </button>
+          <>
+            {activeBike ? (
+              <button type="button" className="order orderDisabled" disabled>
+                Wybrano
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="order"
+                onClick={() => handleChooseBike(name)}
+              >
+                Wybierz
+              </button>
+            )}
+          </>
         )}
       </div>
+      {confirmDelete && (
+        <div className="confirmDelete">
+          <h3>Czy na pewno chcesz usunąć ten rower?</h3>
+          <h4>{name}</h4>
+          <img src={img} alt="" />
+          <section>
+            <button onClick={() => setConfirmDelete(false)}>Anuluj</button>
+            <button
+              onClick={() => {
+                // deleteBike(confirmDelete.id);
+                setConfirmDelete(false);
+              }}
+            >
+              Tak
+            </button>
+          </section>
+        </div>
+      )}
     </Wrapper>
   );
 };
@@ -246,6 +287,70 @@ const Wrapper = styled.div`
     :hover {
       letter-spacing: 3px;
       background: white;
+    }
+  }
+  .buttonAdminContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .order {
+      width: 50%;
+      :nth-of-type(2) {
+        background-color: darkred;
+      }
+    }
+  }
+  .confirmDelete {
+    background-color: #111;
+    position: fixed;
+    z-index: 99999999999999999999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border: 2px solid var(--secondaryColor3);
+    h3,
+    h4 {
+      width: 100%;
+      text-align: center;
+      font-size: 2rem;
+      color: white;
+    }
+    h4 {
+      color: var(--secondaryColor);
+      text-transform: uppercase;
+      margin: 2vh auto;
+      font-family: var(--headerFont);
+    }
+    img {
+      width: 22vw;
+      height: 14vw;
+      object-fit: cover;
+      margin: 5vh auto;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 2rem;
+      font-family: var(--headerFont);
+      border: none;
+      border-radius: 5px;
+      margin: 0 5vw;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: 0.5s;
+      :hover {
+        opacity: 1;
+      }
+      :nth-of-type(2) {
+        background-color: darkred;
+        color: white;
+      }
     }
   }
 `;
