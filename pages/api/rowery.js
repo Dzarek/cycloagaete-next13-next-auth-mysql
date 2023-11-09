@@ -56,20 +56,18 @@ export default async function handler(req, res) {
   //   };
   //   res.status(200).json({ response: { message: message, product: product } });
   // }
-  // if (req.method === "DELETE") {
-  //   const productId = req.body.product_id;
-  //   const deleteProduct = await query({
-  //     query: "DELETE FROM products WHERE product_id = ?",
-  //     values: [productId],
-  //   });
-  //   const result = deleteProduct.affectedRows;
-  //   if (result) {
-  //     message = "success";
-  //   } else {
-  //     message = "error";
-  //   }
-  //   res
-  //     .status(200)
-  //     .json({ response: { message: message, product_id: productId } });
-  // }
+  if (req.method === "DELETE") {
+    const bikeId = req.body.id;
+    const deleteProduct = await query({
+      query: "DELETE FROM rowery WHERE id = ?",
+      values: [bikeId],
+    });
+    const result = deleteProduct.affectedRows;
+    if (result) {
+      message = "success";
+    } else {
+      message = "error";
+    }
+    res.status(200).json({ response: { message: message, id: bikeId } });
+  }
 }

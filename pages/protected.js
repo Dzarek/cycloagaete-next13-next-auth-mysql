@@ -124,6 +124,7 @@ const Protected = ({ data_onas, data_galeria, data_rowery }) => {
                 <RoweryAdmin
                   rowerySQL={rowerySQL}
                   setRowerySQL={setRowerySQL}
+                  confirmationTime={confirmationTime}
                 />
               )}
             </div>

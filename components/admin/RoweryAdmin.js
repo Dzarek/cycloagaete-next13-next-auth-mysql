@@ -2,8 +2,9 @@ import styled from "styled-components";
 import OneBike from "../OneBike";
 import { useState } from "react";
 import UploadImage from "./UploadImageNewBike";
+import { IoClose } from "react-icons/io5";
 
-const RoweryAdmin = ({ rowerySQL, setRowerySQL }) => {
+const RoweryAdmin = ({ rowerySQL, setRowerySQL, confirmationTime }) => {
   const [openModal, setOpenModal] = useState(false);
   const [bikeName, setBikeName] = useState("");
   const [bikeImg, setBikeImg] = useState("");
@@ -21,6 +22,23 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL }) => {
   const handleAddBikeDetails = () => {
     setBikeDetails([...bikeDetails, bikeDetailsInput]);
     setBikeDetailsInput("");
+  };
+  const resetForm = () => {
+    // alert('Nowy rower został dodany do listy.')
+    confirmationTime();
+    setOpenModal(false);
+    setBikeName("");
+    setBikeImg("");
+    setBikeDetails([]);
+    setBikeDetailsInput("");
+    setBikeInfo("");
+    setBikeSize(0);
+    setBikePrices({
+      one: 0,
+      twoFive: 0,
+      sixTwelve: 0,
+      thirteen: 0,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -62,6 +80,20 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL }) => {
       );
       const response = await res.json();
       if (response.response.message !== "success") return;
+      resetForm();
+      const newBike = response.response.bike;
+      setRowerySQL([
+        ...rowerySQL,
+        {
+          id: newBike.id,
+          name: newBike.name,
+          img: newBike.img,
+          details: JSON.parse(newBike.details),
+          info: newBike.info,
+          size: newBike.size,
+          prices: JSON.parse(newBike.prices),
+        },
+      ]);
     }
   };
 
@@ -86,9 +118,10 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL }) => {
         </button>
         {openModal && (
           <>
-            <button onClick={() => setOpenModal(false)}>
-              Anuluj dodawanie
-            </button>
+            <IoClose
+              className="hideModal"
+              onClick={() => setOpenModal(false)}
+            />
             <form className="newBikeForm" onSubmit={(e) => handleSubmit(e)}>
               <input
                 type="text"
@@ -251,6 +284,10 @@ const Wrapper = styled.div`
     @media screen and (max-width: 800px) {
       width: 100%;
     }
+  }
+
+  .hideModal {
+    font-size: 2rem;
   }
 `;
 
