@@ -6,8 +6,8 @@ import { useState, useEffect } from "react";
 import { GiCheckMark } from "react-icons/gi";
 import { useRouter } from "next/router";
 
-const OneBike = ({ item }) => {
-  const { name, img, details, info, size, prices } = item;
+const OneBike = ({ item, rowerySQL, setRowerySQL, handleEdit }) => {
+  const { id, name, img, details, info, size, prices } = item;
   const [activeBike, setActiveBike] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { choosenBikes, setChoosenBikes } = useGlobalContext();
@@ -26,8 +26,27 @@ const OneBike = ({ item }) => {
 
   const router = useRouter();
 
-  const deleteBike = () => {};
-
+  const deleteBike = async (id) => {
+    if (!id) return;
+    const postData = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/api/rowery`,
+      postData
+    );
+    const response = await res.json();
+    if (response.response.message !== "success") return;
+    const idToRemove = parseFloat(response.response.id);
+    const newDataArray = rowerySQL.filter((item) => item.id !== idToRemove);
+    setRowerySQL(newDataArray);
+  };
   return (
     <Wrapper>
       {activeBike && <GiCheckMark className="okMark" />}
@@ -64,7 +83,11 @@ const OneBike = ({ item }) => {
         </ul>
         {router.pathname === "/protected" ? (
           <div className="buttonAdminContainer">
-            <button type="button" className="order">
+            <button
+              type="button"
+              className="order"
+              onClick={() => handleEdit(id)}
+            >
               Edytuj
             </button>
             <button
@@ -102,7 +125,7 @@ const OneBike = ({ item }) => {
             <button onClick={() => setConfirmDelete(false)}>Anuluj</button>
             <button
               onClick={() => {
-                // deleteBike(confirmDelete.id);
+                deleteBike(id);
                 setConfirmDelete(false);
               }}
             >
@@ -157,15 +180,18 @@ const Wrapper = styled.div`
   }
   section {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     font-weight: 500;
 
     img {
       width: 40%;
+      height: 100%;
+      object-fit: cover;
     }
     .info {
-      width: 55%;
+      width: 57%;
+      margin-bottom: 3vh;
       h4 {
         margin-top: 2vh;
         margin-bottom: 0.5vh;
@@ -240,7 +266,7 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     list-style: none;
-    margin-top: 2vh;
+    /* margin-top: 2vh; */
     li {
       background: var(--secondaryColor3);
       color: #fff;

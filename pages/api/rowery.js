@@ -36,33 +36,55 @@ export default async function handler(req, res) {
     res.status(200).json({ response: { message: message, bike: bike } });
   }
 
-  // if (req.method === "PUT") {
-  //   const productId = req.body.product_id;
-  //   const productName = req.body.product_name;
-  //   const updateProduct = await query({
-  //     query: "UPDATE products SET product_name = ? WHERE product_id = ?",
-  //     values: [productName, productId],
-  //   });
+  if (req.method === "PUT") {
+    const newBike = req.body.newBike;
+    const {
+      bikeId,
+      bikeName,
+      bikeImg,
+      bikeDetails,
+      bikeInfo,
+      bikeSize,
+      bikePrices,
+    } = newBike;
+    const updateProduct = await query({
+      query:
+        "UPDATE rowery SET name = ?, img = ?, details = ?, info = ?, size = ?, prices = ? WHERE id = ?",
+      values: [
+        bikeName,
+        bikeImg,
+        bikeDetails,
+        bikeInfo,
+        bikeSize,
+        bikePrices,
+        bikeId,
+      ],
+    });
 
-  //   const result = updateProduct.affectedRows;
-  //   if (result) {
-  //     message = "success";
-  //   } else {
-  //     message = "error";
-  //   }
-  //   const product = {
-  //     product_id: productId,
-  //     product_name: productName,
-  //   };
-  //   res.status(200).json({ response: { message: message, product: product } });
-  // }
+    const result = updateProduct.affectedRows;
+    if (result) {
+      message = "success";
+    } else {
+      message = "error";
+    }
+    let bike = {
+      id: bikeId,
+      name: bikeName,
+      img: bikeImg,
+      details: bikeDetails,
+      info: bikeInfo,
+      size: bikeSize,
+      prices: bikePrices,
+    };
+    res.status(200).json({ response: { message: message, bike: bike } });
+  }
   if (req.method === "DELETE") {
     const bikeId = req.body.id;
-    const deleteProduct = await query({
+    const deleteBike = await query({
       query: "DELETE FROM rowery WHERE id = ?",
       values: [bikeId],
     });
-    const result = deleteProduct.affectedRows;
+    const result = deleteBike.affectedRows;
     if (result) {
       message = "success";
     } else {
