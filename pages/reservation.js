@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useGlobalContext } from "../components/context";
 import emailjs from "emailjs-com";
-import { bikesArray } from "../public/data";
+// import { bikesArray } from "../public/data";
+import { getData } from "../lib/datamanagmend";
 import OneBike from "../components/OneBike";
 import RodoCookies from "../components/RodoCookies";
 import Carousel from "@brainhubeu/react-carousel";
@@ -23,7 +24,7 @@ import { IoClose } from "react-icons/io5";
 
 let minDate = new Date().toISOString().slice(0, 10);
 
-const Reservation = () => {
+const Reservation = ({ data_rowery }) => {
   const { choosenBikes, setChoosenBikes } = useGlobalContext();
 
   const [visibleCookie, setVisibleCookie] = useState(false);
@@ -138,7 +139,7 @@ const Reservation = () => {
   };
 
   const handleDelete = (item) => {
-    const updateBikes = choosenBikes.filter((el) => el !== item);
+    const updateBikes = choosenBikes.filter((el) => el.name !== item);
     setChoosenBikes(updateBikes);
   };
 
@@ -231,13 +232,14 @@ const Reservation = () => {
                   </div>
                 }
               >
-                {bikesArray.map((item, index) => {
-                  return (
-                    <div className="oneBike" key={index}>
-                      <OneBike item={item} />
-                    </div>
-                  );
-                })}
+                {data_rowery &&
+                  data_rowery.rowery.map((item, index) => {
+                    return (
+                      <div className="oneBike" key={index}>
+                        <OneBike item={item} />
+                      </div>
+                    );
+                  })}
               </Carousel>
               <div className="choosenBikes">
                 <h4>Wybrane rowery:</h4>
@@ -246,9 +248,13 @@ const Reservation = () => {
                     {choosenBikes.map((item, index) => {
                       return (
                         <li key={index}>
-                          <MdPedalBike /> {item}
-                          <input type="hidden" name="bikeList" value={item} />
-                          <IoClose onClick={() => handleDelete(item)} />
+                          <MdPedalBike /> {item.name}
+                          <input
+                            type="hidden"
+                            name="bikeList"
+                            value={item.name}
+                          />
+                          <IoClose onClick={() => handleDelete(item.name)} />
                         </li>
                       );
                     })}
@@ -666,10 +672,10 @@ const Wrapper = styled.div`
   }
 
   .carousel {
-    height: 70vh;
-    @media screen and (min-height: 800px) {
+    /* height: 70vh; */
+    /* @media screen and (min-height: 800px) {
       height: 60vh;
-    }
+    } */
     @media screen and (max-width: 800px) {
       width: 100vw;
       height: auto;
@@ -968,5 +974,10 @@ const Wrapper = styled.div`
     }
   }
 `;
+
+export const getServerSideProps = async () => {
+  const data_rowery = await getData("rowery");
+  return { props: { data_rowery: data_rowery } };
+};
 
 export default Reservation;

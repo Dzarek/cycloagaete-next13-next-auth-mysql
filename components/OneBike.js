@@ -12,19 +12,23 @@ const OneBike = ({ item, rowerySQL, setRowerySQL, handleEdit }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { choosenBikes, setChoosenBikes } = useGlobalContext();
 
-  const handleChooseBike = (name) => {
-    const newBikes = [...choosenBikes, name];
+  const router = useRouter();
+
+  const handleChooseBike = (item) => {
+    const newBikes = [...choosenBikes, item];
     setChoosenBikes(newBikes);
   };
   useEffect(() => {
-    if (choosenBikes.includes(name)) {
+    if (
+      router.pathname !== "/protected" &&
+      choosenBikes.length > 0 &&
+      choosenBikes.find((item) => item.name === name)
+    ) {
       setActiveBike(true);
     } else {
       setActiveBike(false);
     }
   }, [choosenBikes]);
-
-  const router = useRouter();
 
   const deleteBike = async (id) => {
     if (!id) return;
@@ -49,7 +53,11 @@ const OneBike = ({ item, rowerySQL, setRowerySQL, handleEdit }) => {
   };
   return (
     <Wrapper>
-      {activeBike && <GiCheckMark className="okMark" />}
+      {activeBike && (
+        <div className="okMark">
+          <GiCheckMark />
+        </div>
+      )}
       <div className={activeBike ? "bikeDisable" : ""}>
         <h3 className="bikeName">{name}</h3>
         <section>
@@ -108,7 +116,7 @@ const OneBike = ({ item, rowerySQL, setRowerySQL, handleEdit }) => {
               <button
                 type="button"
                 className="order"
-                onClick={() => handleChooseBike(name)}
+                onClick={() => handleChooseBike(item)}
               >
                 Wybierz
               </button>
@@ -153,12 +161,17 @@ const Wrapper = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--primaryColor);
-    font-size: 5rem;
     z-index: 9;
-    width: 100%;
-    height: 100%;
-    padding: 20%;
+    padding: 25px;
+    background: #555;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+      color: white;
+      font-size: 3rem;
+    }
   }
   .bikeName {
     width: 100%;

@@ -6,10 +6,10 @@ import {
   MdOutlineArrowForwardIos,
 } from "react-icons/md";
 import Link from "next/link";
-import { bikesArray } from "../../public/data";
+// import { bikesArray } from "../../public/data";
 import OneBike from "../OneBike";
 
-const ShortBikes = () => {
+const ShortBikes = ({ bikesArray }) => {
   return (
     <Wrapper className="mainPage">
       <div className="title">
@@ -66,10 +66,10 @@ const Wrapper = styled.div`
   .carousel {
     width: 80vw;
     margin: 7vh auto 3vh;
-    height: 70vh;
-    @media screen and (min-height: 800px) {
+    /* height: 70vh; */
+    /* @media screen and (min-height: 800px) {
       height: 55vh;
-    }
+    } */
     @media screen and (max-width: 800px) {
       width: 100vw;
       height: auto;

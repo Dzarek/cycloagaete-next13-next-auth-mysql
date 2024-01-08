@@ -18,7 +18,8 @@ function MyApp({ Component, pageProps }) {
   return (
     <div className="app">
       <AppProvider>
-        {router.pathname !== "/reservation" && <ChoosenBike />}
+        {router.pathname !== "/reservation" &&
+          router.pathname !== "/protected" && <ChoosenBike />}
         {router.pathname !== "/auth/signin" &&
           router.pathname !== "/protected" && <Navbar />}
         {/* <SimpleReactLightbox> */}

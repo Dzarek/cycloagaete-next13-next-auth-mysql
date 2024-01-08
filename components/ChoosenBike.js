@@ -4,7 +4,7 @@ import { useGlobalContext } from "./context";
 import { MdPedalBike } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { HiArrowCircleRight } from "react-icons/hi";
-import { bikesArray } from "../public/data";
+// import { bikesArray } from "../public/data";
 import Link from "next/link";
 
 const ChoosenBike = () => {
@@ -13,16 +13,11 @@ const ChoosenBike = () => {
   const [activeImg, setActiveImg] = useState(null);
 
   const handleDelete = (item) => {
-    const updateBikes = choosenBikes.filter((el) => el !== item);
+    const updateBikes = choosenBikes.filter((el) => el.name !== item);
     setChoosenBikes(updateBikes);
     if (updateBikes.length < 1) {
       setShowBikes(false);
     }
-  };
-
-  const handleImage = (item) => {
-    const bikeImg = bikesArray.find((el) => el.name === item);
-    setActiveImg(bikeImg);
   };
 
   return (
@@ -57,12 +52,12 @@ const ChoosenBike = () => {
                       <li key={index}>
                         <MdPedalBike />{" "}
                         <p
-                          onMouseOver={() => handleImage(item)}
+                          onMouseOver={() => setActiveImg(item.img)}
                           onMouseLeave={() => setActiveImg(null)}
                         >
-                          {item}
+                          {item.name}
                         </p>
-                        <IoClose onClick={() => handleDelete(item)} />
+                        <IoClose onClick={() => handleDelete(item.name)} />
                       </li>
                     );
                   })}
@@ -75,7 +70,7 @@ const ChoosenBike = () => {
           </div>
           {activeImg && (
             <div className="imgContainer">
-              <img src={activeImg.img} alt="" />
+              <img src={activeImg} alt="" />
             </div>
           )}
         </Wrapper>

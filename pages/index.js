@@ -9,8 +9,9 @@ import ShortFaqRegulations from "../components/homepage/ShortFaqRegulations";
 
 import { getData } from "../lib/datamanagmend";
 
-export default function Home({ data_onas }) {
+export default function Home({ data_onas, data_rowery }) {
   const dataOnas = data_onas.onas[0].info;
+  const bikesArray = data_rowery.rowery;
 
   return (
     <>
@@ -24,7 +25,7 @@ export default function Home({ data_onas }) {
       </Head>
       <div>
         <Header />
-        <ShortBikes />
+        <ShortBikes bikesArray={bikesArray} />
         <AboutUs dataOnas={dataOnas} />
         <ShortRoads />
         <ShortGallery />
@@ -36,5 +37,6 @@ export default function Home({ data_onas }) {
 
 export const getServerSideProps = async () => {
   const data_onas = await getData("onas");
-  return { props: { data_onas: data_onas } };
+  const data_rowery = await getData("rowery");
+  return { props: { data_onas: data_onas, data_rowery: data_rowery } };
 };
