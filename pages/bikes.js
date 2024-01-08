@@ -187,13 +187,7 @@ const Wrapper = styled.div`
 
 export default Bikes;
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const data_rowery = await getData("rowery");
-
-  return {
-    props: {
-      data_rowery: data_rowery,
-    },
-    revalidate: 60,
-  };
+  return { props: { data_rowery: data_rowery } };
 };
