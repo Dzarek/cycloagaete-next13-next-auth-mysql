@@ -215,7 +215,7 @@ const Wrapper = styled.div`
 
     .singleQuestion {
       margin: 2vh auto;
-      width: 100%;
+      width: 50vw;
       background: #fff;
       /* color: var(--secondaryColor2); */
       border-radius: 5px;
@@ -260,7 +260,7 @@ const Wrapper = styled.div`
         font-size: 1.2rem;
         font-weight: 600;
         cursor: pointer;
-        width: 50vw;
+        width: 100%;
         text-transform: uppercase;
         @media screen and (max-width: 800px) {
           font-size: 1.1rem;
