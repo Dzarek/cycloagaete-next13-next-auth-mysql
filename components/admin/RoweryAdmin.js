@@ -175,7 +175,18 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL, confirmationTime }) => {
                   <UploadImage setBikeImg={setBikeImg} />
                 </div>
               ) : (
-                <img src={bikeImg} alt="" />
+                <>
+                  <img src={bikeImg} alt="" />
+                  {editing && (
+                    <button
+                      className="imgUpload2"
+                      type="button"
+                      onClick={() => setBikeImg("")}
+                    >
+                      zmień zdjęcie
+                    </button>
+                  )}
+                </>
               )}
             </div>
             <div className="addText">
@@ -195,8 +206,12 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL, confirmationTime }) => {
                 <ul>
                   {bikeDetails.map((item, index) => {
                     return (
-                      <li key={index}>
-                        {item} <IoClose onClick={() => deleteOneDetail(item)} />
+                      <li key={index} className="deleteOneDetailLi">
+                        - {item}{" "}
+                        <IoClose
+                          onClick={() => deleteOneDetail(item)}
+                          className="deleteOneDetail"
+                        />
                       </li>
                     );
                   })}
@@ -224,7 +239,7 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL, confirmationTime }) => {
             <section className="bikePrices">
               <h4>Cennik:</h4>
               <div className="onePrice">
-                <label htmlFor="oneDay">1 dzień:</label>
+                <label htmlFor="oneDay">1 dzień / €:</label>
                 <input
                   type="number"
                   id="oneDay"
@@ -239,7 +254,7 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL, confirmationTime }) => {
                 />
               </div>
               <div className="onePrice">
-                <label htmlFor="twoFive">2-5 dni:</label>
+                <label htmlFor="twoFive">2-5 dni / €:</label>
                 <input
                   type="number"
                   id="twoFive"
@@ -254,7 +269,7 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL, confirmationTime }) => {
                 />
               </div>
               <div className="onePrice">
-                <label htmlFor="sixTwelve">6-12 dni:</label>
+                <label htmlFor="sixTwelve">6-12 dni / €:</label>
                 <input
                   type="number"
                   id="sixTwelve"
@@ -269,7 +284,7 @@ const RoweryAdmin = ({ rowerySQL, setRowerySQL, confirmationTime }) => {
                 />
               </div>
               <div className="onePrice">
-                <label htmlFor="thirteen">13 dni:</label>
+                <label htmlFor="thirteen">13 dni / €:</label>
                 <input
                   type="number"
                   id="thirteen"
@@ -375,10 +390,13 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
     img {
       width: 100%;
       height: 40vh;
       object-fit: cover;
+      background-color: white;
+      border: 2px solid var(--secondaryColor);
     }
     .imgUpload {
       width: 100%;
@@ -387,6 +405,25 @@ const Wrapper = styled.div`
       align-items: center;
       justify-content: center;
       padding-bottom: 2vh;
+    }
+    .imgUpload2 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 100%);
+      padding: 10px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      background-color: var(--secondaryColor);
+      border: none;
+      border-radius: 5px;
+      text-transform: uppercase;
+      font-family: var(--titleFont);
+      transition: 0.5s;
+      :hover {
+        letter-spacing: 3px;
+      }
     }
     input {
       margin-bottom: 5vh;
@@ -446,9 +483,15 @@ const Wrapper = styled.div`
     ul {
       list-style: square;
       margin-top: 2vh;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
       li {
         font-size: 1.2rem;
         color: var(--secondaryColor);
+        display: flex;
+        align-items: center;
       }
     }
   }
@@ -467,6 +510,12 @@ const Wrapper = styled.div`
       color: var(--secondaryColor);
       cursor: pointer;
     }
+  }
+  .deleteOneDetail {
+    color: darkred;
+    cursor: pointer;
+    margin-top: 3px;
+    margin-left: 5px;
   }
   .onePrice {
     display: flex;

@@ -13,13 +13,15 @@ import { GrStatusGood } from "react-icons/gr";
 import ONasAdmin from "@/components/admin/ONasAdmin";
 import GaleriaAdmin from "@/components/admin/GaleriaAdmin";
 import RoweryAdmin from "@/components/admin/RoweryAdmin";
+import FaqAdmin from "@/components/admin/FaqAdmin";
 
-const Protected = ({ data_onas, data_galeria, data_rowery }) => {
+const Protected = ({ data_onas, data_galeria, data_rowery, data_faq }) => {
   const [confirmation, setConfirmation] = useState(false);
   const [activeData, setActiveData] = useState(null);
   const [onasInfo, setOnasInfo] = useState(data_onas.onas[0].info);
   const [rowerySQL, setRowerySQL] = useState(data_rowery.rowery);
   const [imagesCloudinary, setImagesCloudinary] = useState(data_galeria);
+  const [faqSQL, setFaqSQL] = useState(data_faq.faq);
 
   useEffect(() => {
     Aos.init({ duration: 1000, disable: "false" });
@@ -124,6 +126,13 @@ const Protected = ({ data_onas, data_galeria, data_rowery }) => {
                 <RoweryAdmin
                   rowerySQL={rowerySQL}
                   setRowerySQL={setRowerySQL}
+                  confirmationTime={confirmationTime}
+                />
+              )}
+              {activeData.name === "FAQ" && (
+                <FaqAdmin
+                  faqSQL={faqSQL}
+                  setFaqSQL={setFaqSQL}
                   confirmationTime={confirmationTime}
                 />
               )}
@@ -271,6 +280,7 @@ export const getServerSideProps = async (context) => {
   const data_onas = await getData("onas");
   const data_rowery = await getData("rowery");
   const data_galeria = await getGalleryImages("galeria");
+  const data_faq = await getData("faq");
 
   if (!session) {
     return {
@@ -282,6 +292,7 @@ export const getServerSideProps = async (context) => {
         session: null,
         data_onas: null,
         data_galeria: null,
+        data_faq: null,
       },
     };
   }
@@ -292,6 +303,7 @@ export const getServerSideProps = async (context) => {
       data_onas: data_onas,
       data_rowery: data_rowery,
       data_galeria: data_galeria,
+      data_faq: data_faq,
     },
   };
 };
