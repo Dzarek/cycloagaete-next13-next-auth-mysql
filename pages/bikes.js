@@ -63,6 +63,8 @@ const Bikes = ({ data_rowery }) => {
   );
 };
 
+// aaa
+
 const Wrapper = styled.div`
   width: 100vw;
   min-height: 80vh;
