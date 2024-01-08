@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { query } from "../../../lib/db";
 
-const authOptions = {
+export const authOptions = {
   session: {
     strategy: "jwt",
   },
